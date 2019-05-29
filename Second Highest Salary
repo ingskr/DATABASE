@@ -1,0 +1,45 @@
+编写一个 SQL 查询，获取 Employee 表中第二高的薪水（Salary） 。
+
++----+--------+
+| Id | Salary |
++----+--------+
+| 1  | 100    |
+| 2  | 200    |
+| 3  | 300    |
++----+--------+
+
+例如上述 Employee 表，SQL查询应该返回 200 作为第二高的薪水。如果不存在第二高的薪水，那么查询应返回 null。
+
++---------------------+
+| SecondHighestSalary |
++---------------------+
+| 200                 |
++---------------------+
+
+answer:
+（1）mysql：如果只有一项，则没有第二高薪水，返回null,解决方法将其作为一个临时表。
+select
+  (select distinct
+          Salary
+        from
+           Employee
+        order by Salary desc
+        limit 1 offset 1) AS SecondHightestSalary;
+#select distinct 列名称 from 表名称，用于返回唯一的不同值。
+#limit offset的用法，
+#数据库数据计算是从0开始的
+#语句1：select * from student limit 9,4
+#语句2：slect * from student limit 4 offset 9
+#语句1和2均返回表student的第10、11、12、13行  
+#语句2中的4表示返回4行，9表示从表的第十行开始
+（2）使用ifnull和limit子句
+#解决null问题的另外一种方法“ifnull”函数
+select
+  ifnull(
+  (select distinct Salary 
+    from Employee
+    order by Salary desc
+    limit 1 offset 1),
+    null) AS secondHightestSalary
+   (1)执行时间为522ms
+   (2)执行时间为354ms即ifnull相对更高效。
