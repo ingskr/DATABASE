@@ -1,0 +1,8 @@
+1、mysql数据库连接问题ERROR 1130:
+use mysql
+select host, user from user;
+将相应用户数据表中的host字段改为‘%’；
+update user set host='%' where user='root';
+ERROR 1062 (23000): Duplicate entry '%-root' for key 'PRIMARY'不用管
+flush privileges;
+重新远程连接OK
